@@ -25,6 +25,10 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const handleWhatsAppClick = () => {
+    window.open("https://wa.me/34610697230?text=Hello%20there!", "_blank");
+  };
+
   return (
     <>
       <div className="w-full bg-[#2E2810] text-white text-center py-2 text-xs sm:text-sm font-light">
@@ -78,6 +82,7 @@ export default function Navbar() {
                   >
                     <WhatsAppIcon
                       fontSize="inheirt"
+                      onClick={handleWhatsAppClick}
                       style={{ fontSize: "32px" }}
                       className="border-solid border-[1px] border-customBorder rounded-[4px] p-1 text-black w-6 h-6  hover:bg-hoverColor"
                     />
