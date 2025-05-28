@@ -1,6 +1,62 @@
+import React, { useState } from "react";
 import { TextField, Button, MenuItem } from "@mui/material";
 
 export default function ContactForm() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    businessEmail: "",
+    phoneNumber: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    console.log("submitTriggered")
+    e.preventDefault();
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.businessEmail ||
+      !formData.phoneNumber ||
+      !formData.message
+    ) {
+      alert("Please fill in all the fields.");
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    for (let key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
+    try {
+      const response = await fetch("https://cremecakesandcocktails.shop/contact-form.php", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (response.ok) {
+        alert("Your message has been sent successfully!");
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Failed to send message.");
+    }
+  };
+
   return (
     <div className="bg-black text-white py-20">
       <div className="container mx-auto px-4">
@@ -10,9 +66,15 @@ export default function ContactForm() {
           Catalogue of Catering Products!
         </h2>
 
-        <form className=" border-[1px] border-solid border-[#FFFFFF] rounded-[6.92px] p-4 max-w-[34.375rem] mx-auto space-y-4 mt-8">
+        <form
+          onSubmit={handleSubmit}
+          className="border-[1px] border-solid border-[#FFFFFF] rounded-[6.92px] p-4 max-w-[34.375rem] mx-auto space-y-4 mt-8"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextField
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
               placeholder="First name"
               variant="outlined"
               fullWidth
@@ -41,6 +103,9 @@ export default function ContactForm() {
               }}
             />
             <TextField
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
               placeholder="Last name"
               variant="outlined"
               fullWidth
@@ -70,6 +135,9 @@ export default function ContactForm() {
           </div>
 
           <TextField
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="Your email"
             variant="outlined"
             fullWidth
@@ -98,6 +166,9 @@ export default function ContactForm() {
           />
 
           <TextField
+            name="businessEmail"
+            value={formData.businessEmail}
+            onChange={handleChange}
             placeholder="Business email"
             variant="outlined"
             fullWidth
@@ -147,16 +218,15 @@ export default function ContactForm() {
                 "& .MuiSelect-select": {
                   color: "white",
                 },
-                "& .MuiSelect-select::placeholder": {
-                  color: "#CCCCCC", // Placeholder color
-                  opacity: 1, // Ensure the opacity doesn't make the placeholder lighter
-                },
               }}
             >
               <MenuItem value="+123">+123</MenuItem>
             </TextField>
 
             <TextField
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
               placeholder="Phone number"
               variant="outlined"
               fullWidth
@@ -187,6 +257,9 @@ export default function ContactForm() {
           </div>
 
           <TextField
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
             placeholder="How can we help?"
             multiline
             rows={4}
@@ -222,7 +295,7 @@ export default function ContactForm() {
             type="submit"
             variant="contained"
             fullWidth
-            className=" hover:bg-white/90 py-3 text-base normal-case rounded "
+            className="hover:bg-white/90 py-3 text-base normal-case rounded"
           >
             Submit
           </Button>

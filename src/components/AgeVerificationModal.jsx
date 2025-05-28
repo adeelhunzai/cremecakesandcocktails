@@ -10,7 +10,7 @@ const AgeVerificationModal = () => {
   };
 
   const handleGoBack = () => {
-    window.history.back(); // Redirects to the previous page
+    window.close();
   };
 
   return (
